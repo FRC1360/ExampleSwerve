@@ -25,7 +25,7 @@ public class RobotContainer {
       swerveSubsystem.driveCommand(
         () -> deadband(leftJoystick.getY(), 0.1) * -1.0,
         () -> deadband(leftJoystick.getX(), 0.1) * -1.0,
-        () -> deadband(rightJoystick.getX(), 0.1) * -1.0)
+        () -> deadband(rightJoystick.getX(), 0.1) * -1.0 * 0.5)
     );
   }
 
