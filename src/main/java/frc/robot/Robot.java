@@ -28,8 +28,8 @@ public class Robot extends LoggedRobot {
     Logger.getInstance().recordMetadata("ProjectName", "MyProject"); // Set a metadata value
 
     if (isReal()) {
-      Logger.getInstance().addDataReceiver(new WPILOGWriter("/u/logs"));
-      //Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1")); // Log to a USB stick
+      //Logger.getInstance().addDataReceiver(new WPILOGWriter("/u/logs"));
+      Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/logs")); // Log to a USB stick
       Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
     } else {
@@ -54,6 +54,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledInit() {
+    //Logger.getInstance().end();
   }
 
   @Override
@@ -86,6 +87,7 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    Logger.getInstance().start();
   }
 
   @Override
@@ -99,6 +101,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    Logger.getInstance().end();
   }
 
   @Override

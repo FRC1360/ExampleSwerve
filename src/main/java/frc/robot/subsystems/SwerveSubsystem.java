@@ -65,7 +65,6 @@ public class SwerveSubsystem extends SubsystemBase{
         );
         Logger.recordOutput("DriveTranslation", translation);
         Logger.recordOutput("DriveRotation", rotation);
-        //Logger.getInstance().processInputs("Swerve", move.getX());
     }
 
     public Command driveCommand(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier omegaSpeed) {
@@ -85,8 +84,7 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Module 1 Velocity", swerveDrive.getModules()[1].getDriveMotor().getVelocity());
         SmartDashboard.putNumber("Module 2 Velocity", swerveDrive.getModules()[2].getDriveMotor().getVelocity());
         SmartDashboard.putNumber("Module 3 Velocity", swerveDrive.getModules()[3].getDriveMotor().getVelocity());
-        // Logger.recordOutput("Swerve stuff", swerveDrive.getPose());
-        // odometryPublisher.set(swerveDrive.getPose());
+        Logger.recordOutput("Swerve stuff", swerveDrive.getPose());
     }
     
 }
