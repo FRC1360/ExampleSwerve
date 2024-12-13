@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.commands.GoToNoteCommand;
 import frc.robot.commands.RotateToNote;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -31,6 +32,7 @@ public class RobotContainer {
 
     RotateToNote rotate = new RotateToNote(swerveSubsystem);
     rightJoystick.button(11).whileTrue(rotate);
+    leftJoystick.button(1).whileTrue(new GoToNoteCommand(() -> deadband(leftJoystick.getX(), 0.1) * -1.0, () -> deadband(leftJoystick.getY(), 0.1) * -1.0, swerveSubsystem));
   }
 
   public Command getAutonomousCommand() {

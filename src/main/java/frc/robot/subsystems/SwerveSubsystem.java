@@ -58,11 +58,18 @@ public class SwerveSubsystem extends SubsystemBase{
         /*ChassisSpeeds continuousSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, omega, swerveDrive.getOdometryHeading());
         ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(continuousSpeeds, 0.02);
         swerveDrive.drive(discreteSpeeds, false, new Translation2d());*/
+        drive(x, y, omega, true);
+    }
+
+    public void drive(double x, double y, double omega, boolean fieldRelative) {
+        /*ChassisSpeeds continuousSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, omega, swerveDrive.getOdometryHeading());
+        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(continuousSpeeds, 0.02);
+        swerveDrive.drive(discreteSpeeds, false, new Translation2d());*/
         swerveDrive.drive(new Translation2d(
             x * swerveDrive.getMaximumVelocity(),
             y * swerveDrive.getMaximumVelocity()),
             omega * swerveDrive.getMaximumAngularVelocity(),
-            true,
+            fieldRelative,
             false
         );
     }
