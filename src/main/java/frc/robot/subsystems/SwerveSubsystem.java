@@ -33,7 +33,7 @@ public class SwerveSubsystem extends SubsystemBase{
 
     private final SwerveDrive swerveDrive;
     private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-    private final PhotonCamera photonCamera = new PhotonCamera("Logitech_Camera_Brandon");
+    public final PhotonCamera photonCamera = new PhotonCamera("Logitech_Brandon");
 
     private StructPublisher<Pose2d> odometryPublisher = NetworkTableInstance.getDefault()
         .getStructTopic("SwervePose", Pose2d.struct).publish();
@@ -75,17 +75,14 @@ public class SwerveSubsystem extends SubsystemBase{
         );
     }
 
+    public double getYaw(){
+        return swerveDrive.getYaw().getDegrees();
+    }
+
     @Override
     public void periodic() {
         odometryPublisher.set(swerveDrive.getPose());
 
-        double targetYaw = 0.0;
-
-        var results = photonCamera.getLatestResult();
-        targetYaw = results.getBestTarget().getYaw();
-        
-
-        SmartDashboard.putNumber("target_pitch", targetYaw);
     }
     
 }
