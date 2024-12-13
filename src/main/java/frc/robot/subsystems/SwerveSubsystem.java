@@ -4,12 +4,15 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import swervelib.SwerveDrive;
@@ -17,9 +20,20 @@ import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.proto.Photon;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.EstimatedRobotPose;
+
 public class SwerveSubsystem extends SubsystemBase{
 
     private final SwerveDrive swerveDrive;
+    private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    private final PhotonCamera photonCamera = new PhotonCamera("Logitech_Camera_Brandon");
 
     private StructPublisher<Pose2d> odometryPublisher = NetworkTableInstance.getDefault()
         .getStructTopic("SwervePose", Pose2d.struct).publish();
@@ -64,6 +78,24 @@ public class SwerveSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         odometryPublisher.set(swerveDrive.getPose());
+
+        double targetYaw = 0.0;
+        var results = photonCamera.getAllUnreadResults();
+        if (!results.isEmpty()) {
+            // Camera processed a new frame since last
+            // Get the last one in the list.
+            var result = results.get(results.size() - 1);
+            if (result.hasTargets()) {
+                // At least one AprilTag was seen by the camera
+                for (var target : result.getTargets()) {
+                    if (target.getFiducialId() == 0) {
+                        targetYaw = target.getYaw();
+                    }
+                }
+            }
+        }
+
+        SmartDashboard.putNumber("target_pitch", targetYaw);
     }
     
 }
