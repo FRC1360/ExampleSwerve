@@ -80,20 +80,10 @@ public class SwerveSubsystem extends SubsystemBase{
         odometryPublisher.set(swerveDrive.getPose());
 
         double targetYaw = 0.0;
-        var results = photonCamera.getAllUnreadResults();
-        if (!results.isEmpty()) {
-            // Camera processed a new frame since last
-            // Get the last one in the list.
-            var result = results.get(results.size() - 1);
-            if (result.hasTargets()) {
-                // At least one AprilTag was seen by the camera
-                for (var target : result.getTargets()) {
-                    if (target.getFiducialId() == 0) {
-                        targetYaw = target.getYaw();
-                    }
-                }
-            }
-        }
+
+        var results = photonCamera.getLatestResult();
+        targetYaw = results.getBestTarget().getYaw();
+        
 
         SmartDashboard.putNumber("target_pitch", targetYaw);
     }
